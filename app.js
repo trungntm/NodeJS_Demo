@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 const productRoutes = require('./api/v1.0/product');
 const orderRoutes = require('./api/v1.0/order');
 
-const uri = 'mongodb://trungntm:250303022602asd@ds111258.mlab.com:11258/mongo_node_demo';
+// const uri = 'mongodb://trungntm:250303022602asd@ds111258.mlab.com:11258/mongo_node_demo';
+const uri = 'mongodb://localhost:27017/mongo-node-demo';
 // const mongoClient = require('mongodb').MongoClient;
 
 mongoose.connect(uri, { useNewUrlParser: true })
