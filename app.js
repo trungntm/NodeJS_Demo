@@ -7,9 +7,11 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/v1.0/product');
 const orderRoutes = require('./api/v1.0/order');
+const userRoutes = require('./api/v1.0/user');
 
+const dbConfig = require('./config/dbConfig');
 // const uri = 'mongodb://trungntm:250303022602asd@ds111258.mlab.com:11258/mongo_node_demo';
-const uri = 'mongodb://localhost:27017/mongo-node-demo';
+const uri = `mongodb://${dbConfig.dbHost}/${dbConfig.dbName}`;
 // const mongoClient = require('mongodb').MongoClient;
 
 mongoose.connect(uri, { useNewUrlParser: true })
@@ -32,19 +34,20 @@ app.use(bodyParser.json());
 //     console.log(`Connect mongodb successfully ...`);
 // })
 // 
-
-// TODO : Handling CORS, but it is not work
-// app.use((req, res, next) => {
-//     req.header(`Access-Control-Allow-Origin`, `*`);
-//     req.header(`Access-Control-Allow-Headers`, `Origin`, `X-Requested-With`, `Content-Type`, `Accept`, `Authorization`);
-//     if (req.method === 'OPTIONS') {
-//         req.header(`Access-Control-Allow-Methods`, `PUT, POST, PATCH, DELETE, GET`);
-//         return req.status(200).json({});
-//     }
-// })
-
+/** TODO : Define routes */
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/users', userRoutes);
+
+//TODO : Handling CORS, but it is not work
+app.use((req, res, next) => {
+    req.header(`Access-Control-Allow-Origin`, `*`);
+    req.header(`Access-Control-Allow-Headers`, `Origin`, `X-Requested-With`, `Content-Type`, `Accept`, `Authorization`);
+    if (req.method === 'OPTIONS') {
+        req.header(`Access-Control-Allow-Methods`, `PUT, POST, PATCH, DELETE, GET`);
+        return req.status(200).json({});
+    }
+})
 
 app.use((req, res, next) => {
     const err = new Error(`Not found`);
