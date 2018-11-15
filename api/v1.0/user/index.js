@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
         .then(docs => {
             let response = {
                 count: docs.length,
-                result : docs.map(doc => {
+                result: docs.map(doc => {
                     return {
                         username: doc.username,
                         password: doc.password,
@@ -38,71 +38,70 @@ router.get('/', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-        if(err) {
+        if (err) {
             res.status(500).json({
-                error : err
+                error: err
             })
         } else {
-            let user = new User ({
+            let user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 username: req.body.username,
                 password: hash
             });
             user.save()
-            .then(record => {
-                console.log(record);
-                let response = {
-                    success: 'true',
-                    user: record,
-                    request: {
-                        type: 'POST',
-                        url: `http://${serverConfig.serverHost}:${serverConfig.serverPort}/users/${record._id}`
-                    }
-                };
-                res.status(201).json(response);
-            })
-            .catch(err => {
-                res.status(500).json({
-                    error: err
+                .then(record => {
+                    console.log(record);
+                    let response = {
+                        success: 'true',
+                        user: record,
+                        request: {
+                            type: 'POST',
+                            url: `http://${serverConfig.serverHost}:${serverConfig.serverPort}/users/${record._id}`
+                        }
+                    };
+                    res.status(201).json(response);
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    });
                 });
-            });
         }
     });
 })
 
 router.post('/login', (req, res, next) => {
-    User.find({username: req.body.username})
-    .exec()
-    .then(user => {
-        console.log(process.env);
-        if(user.length < 1) {
-            return res.status(404).json({ message : 'Username is not found!' });
-        }
-        bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-            if(result) {
-                let token = jwt.sign({
-                    _id : user[0]._id,
-                    username : user[0].username
-                }, process.env.JWT_KEY,
-                {
-                    expiresIn : "1h"
-                });
-                return res.status(200).json({
-                    "Beaer Token" : token
-                });
+    User.find({ username: req.body.username })
+        .exec()
+        .then(user => {
+            if (user.length < 1) {
+                return res.status(404).json({ message: 'Username is not found!' });
             }
-            return res.status(401).json({ message : 'Auth fail' });
+            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                if (result) {
+                    let token = jwt.sign({
+                        _id: user[0]._id,
+                        username: user[0].username
+                    }, process.env.JWT_KEY,
+                        {
+                            expiresIn: "1h"
+                        });
+                    return res.status(200).json({
+                        "Beaer Token": token
+                    });
+                }
+                return res.status(401).json({ message: 'Auth fail' });
+            })
         })
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
         });
-    });
 })
 
 router.delete('/:userId', (req, res, next) => {
-    User.remove({_id: req.params.userId})
+    User.remove({ _id: req.params.userId })
         .exec()
         .then(record => {
             let response = {

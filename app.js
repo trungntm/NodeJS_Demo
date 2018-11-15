@@ -26,14 +26,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// mongoClient.connect(uri, { useNewUrlParser: true }, (err, db) => {
-//     if (err) {
-//         console.log(err);
-//         return;
-//     }
-//     console.log(`Connect mongodb successfully ...`);
-// })
-// 
 /** TODO : Define routes */
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);

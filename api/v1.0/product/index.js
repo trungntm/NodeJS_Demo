@@ -72,7 +72,9 @@ router.get('/:productId', (req, res, next) => {
             if (doc) {
                 res.status(200).json(doc);
             } else {
-                res.status(404).json({ message: "No valid entry found for provided ID" });
+                res.status(404).json({
+                    message: "No valid entry found for provided ID"
+                });
             }
         })
         .catch(err => {
