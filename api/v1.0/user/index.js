@@ -48,9 +48,9 @@ router.post('/signup', (req, res, next) => {
                 username: req.body.username,
                 password: hash
             });
+
             user.save()
                 .then(record => {
-                    console.log(record);
                     let response = {
                         success: 'true',
                         user: record,
@@ -77,15 +77,17 @@ router.post('/login', (req, res, next) => {
             if (user.length < 1) {
                 return res.status(404).json({ message: 'Username is not found!' });
             }
+            
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (result) {
                     let token = jwt.sign({
                         _id: user[0]._id,
                         username: user[0].username
-                    }, process.env.JWT_KEY,
-                        {
-                            expiresIn: "1h"
-                        });
+                    },
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "1h"
+                    });
                     return res.status(200).json({
                         "Beaer Token": token
                     });

@@ -35,6 +35,7 @@ app.use('/users', userRoutes);
 app.use((req, res, next) => {
     req.header(`Access-Control-Allow-Origin`, `*`);
     req.header(`Access-Control-Allow-Headers`, `Origin`, `X-Requested-With`, `Content-Type`, `Accept`, `Authorization`);
+    
     if (req.method === 'OPTIONS') {
         req.header(`Access-Control-Allow-Methods`, `PUT, POST, PATCH, DELETE, GET`);
         return req.status(200).json({});

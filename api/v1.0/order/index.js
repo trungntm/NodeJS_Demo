@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Order = require('../../../model/order');
 const Product = require('../../../model/product');
+const serverConfig = require('../../../config/serverConfig');
 
 router.get("/", (req, res, next) => {
     Order.find()
@@ -19,7 +20,7 @@ router.get("/", (req, res, next) => {
                 quantity: doc.quantity,
                 request: {
                     type: `GET`,
-                    url: `http://localhost:3000/orders`
+                    url: `http://${serverConfig.serverHost}:${serverConfig.serverPort}/orders`
                 }
               }
            })
@@ -48,7 +49,7 @@ router.post("/", (req, res, next) => {
             quantity: result.quantity,
             request: {
                 type: `POST`,
-                url: `http://localhost:3000/orders`
+                url: `http://${serverConfig.serverHost}:${serverConfig.serverPort}/orders`
             }
         }
         res.status(201).json(response);

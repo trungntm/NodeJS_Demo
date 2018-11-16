@@ -7,5 +7,6 @@ server.listen(serverConfig.serverPort, serverConfig.serverHost, (err) => {
         console.log(err);
         return;
     }
+    
     console.log(`Server start at ${serverConfig.serverPort}:${serverConfig.serverHost}`);
 });
