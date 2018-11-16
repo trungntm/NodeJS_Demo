@@ -42,11 +42,19 @@ router.post('/', (req, res, next) => {
     });
 
     product.save().then(result => {
-        console.log(result);
-        res.status(201).json({
-            message: 'Handling POST request /products',
-            createdProduct: result
-        });
+        const response = {
+            success: true,
+            message: 'Insert product successfully!',
+            productCreate : {
+                name: product.name,
+                price: product.price
+            },
+            request: {
+                type: 'POST',
+                url: `http://${serverConfig.serverHost}:${serverConfig.serverPort}/products/${product._id}`
+            }
+        }
+        res.status(201).json(response);
     }).catch(err => {
         console.log("ERROR INSERT : " + err);
         res.status(500).json({
