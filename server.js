@@ -8,5 +8,5 @@ server.listen(serverConfig.serverPort, serverConfig.serverHost, (err) => {
         return;
     }
     
-    console.log(`Server start at ${serverConfig.serverPort}:${serverConfig.serverHost}`);
+    console.log(`Server start at ${serverConfig.serverHost}:${serverConfig.serverPort}`);
 });

@@ -13,14 +13,16 @@ const dbConfig = require('./config/dbConfig');
 // const uri = 'mongodb://trungntm:250303022602asd@ds111258.mlab.com:11258/mongo_node_demo';
 const uri = `mongodb://${dbConfig.dbHost}/${dbConfig.dbName}`;
 // const mongoClient = require('mongodb').MongoClient;
-
-mongoose.connect(uri, { useNewUrlParser: true })
+if(mongoose.connection.readyState == 0) {
+    mongoose.connect(uri, { useNewUrlParser: true })
     .then(() => {
-        console.log("connect db success ...");
+        console.log("FIRST : connect db success ...");
     })
     .catch(err => {
         console.log(err);
     })
+}
+
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,15 +34,15 @@ app.use('/orders', orderRoutes);
 app.use('/users', userRoutes);
 
 //TODO : Handling CORS, but it is not work
-app.use((req, res, next) => {
-    req.header(`Access-Control-Allow-Origin`, `*`);
-    req.header(`Access-Control-Allow-Headers`, `Origin`, `X-Requested-With`, `Content-Type`, `Accept`, `Authorization`);
+// app.use((req, res, next) => {
+//     req.header(`Access-Control-Allow-Origin`, `*`);
+//     req.header(`Access-Control-Allow-Headers`, `Origin`, `X-Requested-With`, `Content-Type`, `Accept`, `Authorization`);
     
-    if (req.method === 'OPTIONS') {
-        req.header(`Access-Control-Allow-Methods`, `PUT, POST, PATCH, DELETE, GET`);
-        return req.status(200).json({});
-    }
-})
+//     if (req.method === 'OPTIONS') {
+//         req.header(`Access-Control-Allow-Methods`, `PUT, POST, PATCH, DELETE, GET`);
+//         return req.status(200).json({});
+//     }
+// })
 
 app.use((req, res, next) => {
     const err = new Error(`Not found`);

@@ -1,8 +1,10 @@
 var express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Product = require('../../../model/product');
+const Order = require('../order/order');
+const Product = require('../product/product');
 const serverConfig = require('../../../config/serverConfig');
+const productService = require('./product-service')
 
 router.get('/', (req, res, next) => {
     Product.find()
@@ -41,7 +43,7 @@ router.post('/', (req, res, next) => {
         price: req.body.price
     });
 
-    product.save().then(result => {
+    productService.saveProduct(product).then(result => {
         const response = {
             success: true,
             message: 'Insert product successfully!',
@@ -66,8 +68,7 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
-    Product.findById(id)
-        .exec()
+    productService.findProductByid(id)
         .then(doc => {
             console.log(doc);
             if (doc) {
@@ -108,8 +109,7 @@ router.patch("/:productId", (req, res, next) => {
 
 router.delete("/:productId", (req, res, next) => {
     const id = req.params.productId;
-    Product.remove({ _id: id })
-        .exec()
+    productService.removeProduct(id)
         .then(result => {
             res.status(200).json(result);
         })
